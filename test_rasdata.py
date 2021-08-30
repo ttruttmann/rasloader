@@ -3,4 +3,7 @@ from rasdata import *
 
 class TestRasData(unittest.TestCase):
     def test_constructor(self):
-        test_rasdata = RasData('test_rsm.ras')
+        test_rasdata = RasData('example_scan.ras')
+
+if __name__ == '__main__':
+    unittest.main()
