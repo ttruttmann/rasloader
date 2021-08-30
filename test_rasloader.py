@@ -1,9 +1,9 @@
 import unittest
-from rasdata import *
+from rasloader import *
 
-class TestRasData(unittest.TestCase):
+class TestRasLoader(unittest.TestCase):
     def test_constructor(self):
-        test_rasdata = RasData('example_scan.ras')
+        rasloader = RasLoader('example_scan.ras')
 
 if __name__ == '__main__':
     unittest.main()
