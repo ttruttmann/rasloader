@@ -10,15 +10,10 @@ class CodeNotCompleteException(Exception):
 class UnexpectedLineException(Exception):
     pass
 
-LINES_TO_SKIP = [
-    "*RAS_DATA_START",
-    "*RAS_HEADER_START",
-    "*RAS_HEADER_END",
-    "*RAS_INT_START",
-    "*RAS_INT_END"
-]
-
-LINES_TO_END = [
-    "*RAS_DATA_END",
-    "*DSC_DATA_END"
-]
+START_RAS_LINE = "*RAS_DATA_START\n"
+END_RAS_LINE = "*RAS_DATA_END\n"
+END_FILE_LINE = "*DSC_DATA_END\n"
+START_HEADER_LINE = "*RAS_HEADER_START\n"
+END_HEADER_LINE = "*RAS_HEADER_END\n"
+START_INT_LINE = "*RAS_INT_START\n"
+END_INT_LINE = "*RAS_INT_END\n"
