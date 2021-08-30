@@ -1,6 +1,6 @@
 from rasdata_helper import *
 
-class RasData:
+class RasLoader:
     def __init__(self, filename):
         self.scantype = ScanTypes.SCAN1D
         self.scantype = self.__determine_scantype(filename)
