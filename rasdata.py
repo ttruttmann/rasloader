@@ -16,13 +16,14 @@ class RasData:
     
     def __parse1Dras(self, filename):
         f = open(filename,'r')
-        self.__verify_first_lines(f)
+        self.__ensure_nextline_equals(f,START_RAS_LINE)
         self.__verify_line_equals(f,START_HEADER_LINE)
         header_lines = self.__extract_header_lines(f)
-        self.__verify_lines_equals(f,START_INT_LINE)
+        self.__verify_line_equals(f,START_INT_LINE)
         int_lines = self.__extract_int_lines(f)
-        self.__ensure_nextline_equals(file,END_RAS_LINE)
-        self.__verify_last_lines(f)
+        self.__ensure_nextline_equals(f,END_RAS_LINE)
+        self.__ensure_nextline_equals(f,END_FILE_LINE)
+        self.__ensure_nextline_equals(f,'')
         f.close()
         header_int_pair = HeaderIntPair(header_lines,int_lines)
         self.metadata = header_int_pair.get_final_metadata()
@@ -31,7 +32,7 @@ class RasData:
 
     def __parse2Dras(self, filename):
         f = open(filename,'r')
-        self.__verify_first_lines(f)
+        self.__ensure_nextline_equals(f,START_RAS_LINE)
         while True:
             line = f.readline()
             if line == START_HEADER_LINE:
@@ -43,7 +44,17 @@ class RasData:
                 header_lines = None
                 self.__absorb_header_int_pair(header_int_pair)
             elif line == END_RAS_LINE:
-                self.__verify_last_lines(f)
+                self.__ensure_nextline_equals(f,END_FILE_LINE)
+                self.__ensure_nextline_equals(f,'')
+
+    def __extract_header_lines(self, file):
+        raise CodeNotCompleteException
+
+    def __extract_int_lines(self, file):
+        raise CodeNotCompleteException
+
+    def __absorb_header_int_pair(self,header_int_pair):
+        raise CodeNotCompleteException
 
     def __parse_line_metadata(self, line):
         raise CodeNotCompleteException
@@ -56,13 +67,6 @@ class RasData:
     
     def __parse_line_data2D(self, line, step_axis_value):
         raise CodeNotCompleteException
-    
-    def __verify_first_lines(self,file):
-        self.__ensure_nextline_equals(file,START_RAS_LINE)
-
-    def __verify_last_lines(self,file):
-        self.__ensure_nextline_equals(file,END_FILE_LINE)
-        self.__ensure_nextline_equals(file,'')
 
     def __ensure_nextline_equals(self,file,desired_line):
         if file.getlines() != desired_line:
