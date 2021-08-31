@@ -1,8 +1,9 @@
-from rasdata_helper import *
+from rasloader_helper import *
+import pandas as pd
+
 
 class RasLoader:
     def __init__(self, filename):
-        self.scantype = ScanTypes.SCAN1D
         self.scantype = self.__determine_scantype(filename)
         if self.scantype == ScanTypes.SCAN1D: self.__parse1Dras(filename)
         elif self.scantype == ScanTypes.SCAN2D: self.__parse2Dras(filename)
@@ -48,24 +49,26 @@ class RasLoader:
                 self.__ensure_nextline_equals(f,'')
 
     def __extract_header_lines(self, file):
-        raise CodeNotCompleteException
+        lines = []
+        while True:
+            next_line = file.readline()
+            if next_line == END_HEADER_LINE:
+                break
+            else:
+                lines.append(next_line)
+        return(lines)
 
     def __extract_int_lines(self, file):
-        raise CodeNotCompleteException
+        lines = []
+        while True:
+            next_line = file.readline()
+            if next_line == END_INT_LINE:
+                break
+            else:
+                lines.append(next_line)
+        return(lines)
 
     def __absorb_header_int_pair(self,header_int_pair):
-        raise CodeNotCompleteException
-
-    def __parse_line_metadata(self, line):
-        raise CodeNotCompleteException
-
-    def __parse_line_axis(self, line):
-        raise CodeNotCompleteException
-    
-    def __parse_line_data1D(self, line):
-        raise CodeNotCompleteException
-    
-    def __parse_line_data2D(self, line, step_axis_value):
         raise CodeNotCompleteException
 
     def __ensure_nextline_equals(self,file,desired_line):
