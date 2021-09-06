@@ -38,7 +38,8 @@ class HeaderIntPair:
                         str,
                         str]
         self.__axisdata_raw = pd.DataFrame(columns = axis_columns,dtype=axis_dtypes)
-        self.__intdata_raw = pd.DataFrame(columns=['x','y'],dtype=float)
+        self.__intdata_x = []
+        self.__intdata_y = []
         for line in header_lines:
             if AXIS_DATA_INDICATOR in line:
                 self.__parse_line_axis()
@@ -46,48 +47,67 @@ class HeaderIntPair:
                 self.__parse_line_metadata()
         for line in int_lines:
             self.__parse_line_int(line)
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     def __parse_line_metadata(self, line):
         key = self.__get_header_key(line)
         value = self.__get_header_value(line)
         self.__metadata_raw[key] = value
 
     def __parse_line_axis(self, line):
-        number = self.__get_axis_number(line)
+        number = self.__get_axis_index(line)
         column = self.__get_axis_column(line)
         value = self.__get_axis_value(line)
         self.__axisdata_raw.loc[number,column] = value
-        raise CodeNotCompleteException
     
-    def __parse_line_int(self, line):
-        raise CodeNotCompleteException
+    def __parse_line_int(self, intline):
+        self.__intdata_x.append(self.get_x(intline))
+        self.__intdata_y.append(self.__get_y(intline))
 
     def __get_header_key(self, line):
-        raise CodeNotCompleteException
+        return(line.split(' ')[0].replace('*',''))
 
     def __get_header_value(self, line):
-        raise CodeNotCompleteException
+        line_without_key = ' '.join(line.split(' ')[1:])
+        value_as_string = line_without_key.replace('"','')
+        value = self.__degeneralize_type(value_as_string)
+        return(value)
 
-    def __get_axis_number(self,line):
-        raise CodeNotCompleteException
+    def __get_axis_index(self,line):
+        key = line.split(' ')[0]
+        number_as_string = key.split(' ')[-1]
+        number_as_int = int(number_as_string)
+        return(number_as_int)
 
     def __get_axis_column(self,line):
-        raise CodeNotCompleteException
+        key = line.split(' ')[0]
+        column_uppercase = key.replace(AXIS_DATA_INDICATOR,'')
+        column_lowercase = column_uppercase.lower()
+        return(column_lowercase)
 
-    def __get_axis_value(self,line):
-        raise CodeNotCompleteException
+    def __get_x(self, intline):
+        x_as_string = intline.split(' ')[0]
+        return(float(x_as_string))
 
-    def __get_int_x(self, line):
-        raise CodeNotCompleteException
+    def __get_y(self, intline):
+        y_as_string = intline.split(' ')[1]
+        return(float(y_as_string))
 
-    def __get_int_y(self, line):
-        raise CodeNotCompleteException
+    def __degeneralize_type(self,value_as_string):
+        if value_as_string.isnumeric():
+            value = int(value_as_string)
+        else:
+            try: 
+                value = float(value_as_string)
+            except ValueError:
+                value = value_as_string
+        return(value)
 
     def get_metadata_final(self):
-        raise CodeNotCompleteException
+        return(self.__metadata_raw)
 
     def get_axisdata_final(self):
-        raise CodeNotCompleteException
+        axisdata = self.__axisdata_raw.set_index('name',append=True).reset_index()
+        return(axisdata)
     
     def get_intdata_final(self):
         raise CodeNotCompleteException

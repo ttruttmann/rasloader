@@ -1,6 +1,4 @@
 from rasloader_helper import *
-import pandas as pd
-
 
 class RasLoader:
     def __init__(self, filename):
