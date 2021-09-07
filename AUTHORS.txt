@@ -1,0 +1,1 @@
+RasLoader was originally written by Tristan K Truttmann <tristan.truttmann@gmail.com>
