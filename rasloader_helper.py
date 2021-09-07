@@ -67,7 +67,7 @@ class HeaderIntPair:
 
     def __get_header_value(self, line):
         line_without_key = ' '.join(line.split(' ')[1:])
-        value_as_string = line_without_key.replace('"','')
+        value_as_string = line_without_key.replace('"','').replace('\n','')
         value = self.__degeneralize_type(value_as_string)
         return(value)
 

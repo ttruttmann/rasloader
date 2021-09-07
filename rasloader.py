@@ -20,6 +20,7 @@ class RasLoader:
             elif line == END_RAS_LINE:
                 self.__ensure_nextline_equals(f,END_FILE_LINE)
                 self.__ensure_nextline_equals(f,'')
+                f.close()
                 break
         
     def __extract_header_lines(self, file):
