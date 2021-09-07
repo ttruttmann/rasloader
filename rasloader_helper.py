@@ -8,7 +8,11 @@ START_HEADER_LINE = "*RAS_HEADER_START\n"
 END_HEADER_LINE = "*RAS_HEADER_END\n"
 START_INT_LINE = "*RAS_INT_START\n" # Begins intensity sections
 END_INT_LINE = "*RAS_INT_END\n"
-AXIS_DATA_INDICATOR = "*MEAS_COND_AXIS_"
+
+AXIS_DATA_INDICATOR = "MEAS_COND_AXIS_"
+STEP_AXIS_INDICATOR = "MEAS_3DE_STEP_AXIS_INTERNAL"
+XAXIS_INDICATOR = "MEAS_SCAN_AXIS_X"
+YAXIS_INDICATOR = "MEAS_SCAN_AXIS_Y"
 
 class ScanTypes(Enum):
     SCAN1D = 1
@@ -110,4 +114,26 @@ class HeaderIntPair:
         return(axisdata)
     
     def get_intdata_final(self):
-        raise CodeNotCompleteException
+        xname = self.__metadata_raw[XAXIS_INDICATOR]
+        yname = self.__metadata_raw[YAXIS_INDICATOR]
+        data_dict = {xname:self.__intdata_x,yname:self.__intdata_y}
+        dataframe = pd.DataFrame(data_dict)
+        scantype = self.__get_scan_type()
+        if scantype == ScanTypes.SCAN2D:
+            stepaxis = self._get_step_axis()
+            step_position = self.__get_step_position()
+            dataframe[stepaxis] = step_position
+        return(dataframe)
+
+    def __get_scan_type(self):
+        if self.__metadata_raw.has_key(STEP_AXIS_INDICATOR):
+            return(ScanTypes.SCAN2D)
+        else:
+            return(ScanTypes.SCAN1D)
+
+    def __get_step_axis(self):
+        return(self.__metadata_raw[STEP_AXIS_INDICATOR])
+
+    def __get_step_position(self,step_axis):
+        positions = self.__axisdata_raw['position']
+        return(positions[self.__axisdata_raw['name'] == step_axis])
