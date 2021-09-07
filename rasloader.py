@@ -38,8 +38,25 @@ class RasLoader:
                 lines.append(next_line)
         return(lines)
 
-    def __absorb_header_int_pair(self,header_int_pair):
-        raise CodeNotCompleteException
+    def __absorb_header_int_pair(self,new_pair): # TODO: Probably split this into smaller methods.
+        if not hasattr(self,'metadata'):
+            self.metadata = new_pair.get_metadata_final()
+        else:
+            for new_key, new_value in new_pair.get_metadata_final():
+                if not self.metadata.has_key(new_key):
+                    raise InconsistentHeaderException
+                elif self.metadata[new_key] != new_value:
+                    self.metadata.pop(new_key)
+        if not hasattr(self,'axisdata'):
+            self.axisdata = new_pair.get_axisdata_final()
+        else:
+            for i,row in new_pair.get_axisdata_final():
+                if self.axisdata.iloc[i]['position'] != row['position']:
+                    self.axisdata.iloc[i]['position'] = nan
+        if not hasattr(self,'intdata'):
+            self.intdata = new_pair.get_intdata_final()
+        else:
+            self.indata = self.intdata.append(new_pair.get_intdata_final())
 
     def __ensure_nextline_equals(self,file,desired_line):
         if file.getlines() != desired_line:
