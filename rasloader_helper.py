@@ -12,7 +12,6 @@ END_INT_LINE = "*RAS_INT_END\n"
 AXIS_DATA_INDICATOR = "MEAS_COND_AXIS_"
 STEP_AXIS_INDICATOR = "MEAS_3DE_STEP_AXIS_INTERNAL"
 XAXIS_INDICATOR = "MEAS_SCAN_AXIS_X"
-YAXIS_INDICATOR = "MEAS_SCAN_AXIS_Y"
 
 class ScanTypes(Enum):
     SCAN1D = 1
@@ -37,21 +36,14 @@ class HeaderIntPair:
                         'resolution',
                         'state',
                         'unit']
-        axis_dtypes =  [str,
-                        str,
-                        float,
-                        object,
-                        float,
-                        str,
-                        str]
-        self.__axisdata_raw = pd.DataFrame(columns = axis_columns,dtype=axis_dtypes)
+        self.__axisdata_raw = pd.DataFrame(columns = axis_columns)
         self.__intdata_x = []
         self.__intdata_y = []
         for line in header_lines:
             if AXIS_DATA_INDICATOR in line:
-                self.__parse_line_axis()
+                self.__parse_line_axis(line)
             else:
-                self.__parse_line_metadata()
+                self.__parse_line_metadata(line)
         for line in int_lines:
             self.__parse_line_int(line)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
@@ -63,11 +55,11 @@ class HeaderIntPair:
     def __parse_line_axis(self, line):
         number = self.__get_axis_index(line)
         column = self.__get_axis_column(line)
-        value = self.__get_axis_value(line)
+        value = self.__get_header_value(line)
         self.__axisdata_raw.loc[number,column] = value
     
     def __parse_line_int(self, intline):
-        self.__intdata_x.append(self.get_x(intline))
+        self.__intdata_x.append(self.__get_x(intline))
         self.__intdata_y.append(self.__get_y(intline))
 
     def __get_header_key(self, line):
@@ -81,7 +73,7 @@ class HeaderIntPair:
 
     def __get_axis_index(self,line):
         key = line.split(' ')[0]
-        number_as_string = key.split(' ')[-1]
+        number_as_string = key.split('-')[-1]
         number_as_int = int(number_as_string)
         return(number_as_int)
 
@@ -118,7 +110,7 @@ class HeaderIntPair:
     
     def get_intdata_final(self):
         xname = self.__metadata_raw[XAXIS_INDICATOR]
-        yname = self.__metadata_raw[YAXIS_INDICATOR]
+        yname = 'I'
         data_dict = {xname:self.__intdata_x,yname:self.__intdata_y}
         dataframe = pd.DataFrame(data_dict)
         scantype = self.__get_scan_type()
@@ -129,7 +121,7 @@ class HeaderIntPair:
         return(dataframe)
 
     def __get_scan_type(self):
-        if self.__metadata_raw.has_key(STEP_AXIS_INDICATOR):
+        if STEP_AXIS_INDICATOR in self.__metadata_raw:
             return(ScanTypes.SCAN2D)
         else:
             return(ScanTypes.SCAN1D)
