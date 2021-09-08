@@ -1,3 +1,4 @@
+from numpy import *
 from rasloader_helper import *
 
 class RasLoader:
@@ -47,17 +48,17 @@ class RasLoader:
         if not hasattr(self,'metadata'):
             self.metadata = new_pair.get_metadata_final()
         else:
-            for new_key, new_value in new_pair.get_metadata_final():
-                if not self.metadata.has_key(new_key):
-                    raise InconsistentHeaderException
+            for new_key, new_value in new_pair.get_metadata_final().items():
+                if new_key not in self.metadata:
+                    continue
                 elif self.metadata[new_key] != new_value:
                     self.metadata.pop(new_key)
         if not hasattr(self,'axisdata'):
             self.axisdata = new_pair.get_axisdata_final()
         else:
-            for i,row in new_pair.get_axisdata_final():
-                if self.axisdata.iloc[i]['position'] != row['position']:
-                    self.axisdata.iloc[i]['position'] = nan
+            for i,row in new_pair.get_axisdata_final().iterrows():
+                if self.axisdata.loc[i]['position'] != row['position']:
+                    self.axisdata.loc[i]['position'] = NAN
         if not hasattr(self,'intdata'):
             self.intdata = new_pair.get_intdata_final()
         else:

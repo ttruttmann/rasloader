@@ -78,8 +78,9 @@ class HeaderIntPair:
         return(number_as_int)
 
     def __get_axis_column(self,line):
-        key = line.split(' ')[0]
-        column_uppercase = key.replace(AXIS_DATA_INDICATOR,'')
+        key = line.split(' ')[0].replace('*','')
+        key_without_number = key.split('-')[0]
+        column_uppercase = key_without_number.replace(AXIS_DATA_INDICATOR,'')
         column_lowercase = column_uppercase.lower()
         return(column_lowercase)
 
@@ -105,7 +106,7 @@ class HeaderIntPair:
         return(self.__metadata_raw)
 
     def get_axisdata_final(self):
-        axisdata = self.__axisdata_raw.set_index('name',append=True).reset_index()
+        axisdata = self.__axisdata_raw.set_index('name',append=False)
         return(axisdata)
     
     def get_intdata_final(self):
@@ -115,8 +116,8 @@ class HeaderIntPair:
         dataframe = pd.DataFrame(data_dict)
         scantype = self.__get_scan_type()
         if scantype == ScanTypes.SCAN2D:
-            stepaxis = self._get_step_axis()
-            step_position = self.__get_step_position()
+            stepaxis = self.__get_step_axis()
+            step_position = self.__get_step_position(stepaxis)
             dataframe[stepaxis] = step_position
         return(dataframe)
 
