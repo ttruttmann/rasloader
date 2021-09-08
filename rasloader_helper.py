@@ -23,9 +23,6 @@ class CodeNotCompleteException(Exception):
 class UnexpectedLineException(Exception):
     pass
 
-class InconsistentHeaderException(Exception):
-    pass
-
 class HeaderIntPair:
     def __init__(self,header_lines,int_lines):
         self.__metadata_raw = dict()
@@ -132,4 +129,4 @@ class HeaderIntPair:
 
     def __get_step_position(self,step_axis):
         positions = self.__axisdata_raw['position']
-        return(positions[self.__axisdata_raw['name'] == step_axis])
+        return(positions[self.__axisdata_raw['name'] == step_axis].iloc[0])
