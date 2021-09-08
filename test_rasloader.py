@@ -32,13 +32,12 @@ class TestRasLoader(unittest.TestCase):
         self.assertEqual(rasloader.axisdata.loc['Phi','resolution'],0.002)
         self.assertEqual(rasloader.axisdata.loc['Omega','state'],'Scan')
         self.assertEqual(len(rasloader.intdata.columns),3)
-        self.assertEqual(rasloader.intdata.columns[0],'TwoTheta')
-        self.assertEqual(rasloader.intdata.columns[1],'Omega')
+        self.assertEqual(rasloader.intdata.columns[0],'Omega')
+        self.assertEqual(rasloader.intdata.columns[1],'TwoTheta')
         self.assertEqual(rasloader.intdata.columns[2],'I')
-        self.assertEqual(rasloader.intdata['TwoTheta'][0],44.20)
         self.assertEqual(rasloader.intdata['Omega'][0],22.1) 
+        self.assertEqual(rasloader.intdata['TwoTheta'][0],44.20)
         self.assertEqual(rasloader.intdata['I'][0],0.6716)
         
-
 if __name__ == '__main__':
     unittest.main()

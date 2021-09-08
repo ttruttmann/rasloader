@@ -116,7 +116,7 @@ class HeaderIntPair:
             stepaxis = self.__get_step_axis()
             step_position = self.__get_step_position(stepaxis)
             dataframe[stepaxis] = step_position
-            dataframe = dataframe[[xname,stepaxis,yname]]
+            dataframe = dataframe[[stepaxis,xname,yname]]
         return(dataframe)
 
     def __get_scan_type(self):
