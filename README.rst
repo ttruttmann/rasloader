@@ -3,6 +3,14 @@ RasLoader: Load Rigaku .ras files
 
 RasLoader is a python package that loads .ras files from Rigaku diffractometers. It returns a RasLoader object that contains metadata, axis data, and intensity data.
 
+To install:
+
+.. code-block:: zsh
+
+    $ pip install git+https://github.com/ttruttmann/rasloader
+
+To load files:
+
 .. code-block:: python
 
     >>> from rasloader import RasLoader
