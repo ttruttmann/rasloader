@@ -1,6 +1,5 @@
 from numpy import *
-from rasloader_helper import *
-
+from .rasloader_helper import *
 
 class RasLoader:
     def __init__(self, filename):
